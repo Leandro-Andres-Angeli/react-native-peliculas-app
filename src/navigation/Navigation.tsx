@@ -2,7 +2,12 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen';
 import DetailScreen from '../screens/DetailScreen';
-const Stack = createStackNavigator();
+import { Movie } from '../interfaces/movieInterface';
+export type RootStackParms = {
+  Home: undefined;
+  Details: Movie;
+};
+const Stack = createStackNavigator<RootStackParms>();
 const Navigation = () => {
   return (
     <Stack.Navigator
@@ -12,7 +17,11 @@ const Navigation = () => {
       }}
     >
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Details" component={DetailScreen} />
+      <Stack.Screen
+        name="Details"
+        options={{ cardStyle: { backgroundColor: '#f2f4f7' } }}
+        component={DetailScreen}
+      />
     </Stack.Navigator>
   );
 };

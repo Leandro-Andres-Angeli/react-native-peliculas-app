@@ -15,6 +15,8 @@ import Carousel from 'react-native-reanimated-carousel';
 import HorizontalSlider from '../components/HorizontalSlider';
 
 import { getImagesColor } from '../getColores';
+import LinearGradient from 'react-native-linear-gradient';
+import GradientBackground from '../components/GradientBackground';
 // import { useSharedValue } from 'react-native-reanimated';
 
 const HomeScreen = () => {
@@ -43,38 +45,39 @@ const HomeScreen = () => {
   }
 
   return (
-    <ScrollView>
-      <Text>{JSON.stringify(data)}</Text>
-      <View style={{ flex: 1 }}>
-        <Carousel
-          width={Dimensions.get('window').width * 0.8}
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            height: Dimensions.get('window').height * 0.65,
-          }}
-          data={nowPlaying}
-          loop={true}
-          snapEnabled={true}
-          pagingEnabled={true}
-          onSnapToItem={async idx => await handleSnapToItem(idx)}
-          renderItem={({ item, index }) => (
-            <MoviePoster key={index} movie={item} />
-          )}
-        />
-        <HorizontalSlider title={'Populares'} movies={popular} />
-        <HorizontalSlider title={'Top Rated'} movies={topRated} />
-        <HorizontalSlider title={'Upcoming'} movies={upcoming} />
-        {/* <HorizontalSlider title={'En cine'} movies={peliculasEnCine} /> */}
+    <GradientBackground>
+      <ScrollView>
+        <View style={{ flex: 1 }}>
+          <Carousel
+            width={Dimensions.get('window').width * 0.8}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              height: Dimensions.get('window').height * 0.65,
+            }}
+            data={nowPlaying}
+            loop={true}
+            snapEnabled={true}
+            pagingEnabled={true}
+            onSnapToItem={async idx => await handleSnapToItem(idx)}
+            renderItem={({ item, index }) => (
+              <MoviePoster key={index} movie={item} />
+            )}
+          />
+          <HorizontalSlider title={'Populares'} movies={popular} />
+          <HorizontalSlider title={'Top Rated'} movies={topRated} />
+          <HorizontalSlider title={'Upcoming'} movies={upcoming} />
+          {/* <HorizontalSlider title={'En cine'} movies={peliculasEnCine} /> */}
 
-        {/* 
+          {/* 
       <Button
         title="Ir a detalle"
         onPress={() => navigation.navigate('Details')}
       /> */}
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
+    </GradientBackground>
   );
 };
 

@@ -4,26 +4,36 @@ import {
   ActivityIndicator,
   Dimensions,
   Text,
-  FlatList,
   ScrollView,
 } from 'react-native';
-import React from 'react';
-import {
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-} from '@react-navigation/native';
+import React, { useState } from 'react';
+
 import useMovies from '../hooks/useMovies';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MoviePoster from '../components/MoviePoster';
 import Carousel from 'react-native-reanimated-carousel';
 import HorizontalSlider from '../components/HorizontalSlider';
+
+import { getImagesColor } from '../getColores';
 // import { useSharedValue } from 'react-native-reanimated';
 
 const HomeScreen = () => {
   const { nowPlaying, popular, topRated, upcoming, isLoading } = useMovies();
+  const [data, setData] = useState<any>({});
   const { top } = useSafeAreaInsets();
+  console.log('home');
 
+  const handleSnapToItem = async (idx: number) => {
+    const uri = `https://image.tmdb.org/t/p/w500/${nowPlaying[idx].poster_path}`;
+    setData((await getImagesColor(uri)).palette);
+    // console.log('snap');
+    // getPalette(uri)
+    //   .then(res => console.log('res', res))
+    //   .catch(err => console.log('err', err));
+    // console.log('snap to item');
+    // console.log(picAvgColor);
+    // setData(picAvgColor);
+  };
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', marginTop: top }}>
@@ -34,6 +44,7 @@ const HomeScreen = () => {
 
   return (
     <ScrollView>
+      <Text>{JSON.stringify(data)}</Text>
       <View style={{ flex: 1 }}>
         <Carousel
           width={Dimensions.get('window').width * 0.8}
@@ -47,6 +58,7 @@ const HomeScreen = () => {
           loop={true}
           snapEnabled={true}
           pagingEnabled={true}
+          onSnapToItem={async idx => await handleSnapToItem(idx)}
           renderItem={({ item, index }) => (
             <MoviePoster key={index} movie={item} />
           )}

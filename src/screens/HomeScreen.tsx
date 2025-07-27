@@ -6,7 +6,7 @@ import {
   Text,
   ScrollView,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import useMovies from '../hooks/useMovies';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,6 +17,7 @@ import HorizontalSlider from '../components/HorizontalSlider';
 import { getImagesColor } from '../getColores';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientBackground from '../components/GradientBackground';
+import { GardientContext } from '../context/GardientContext';
 // import { useSharedValue } from 'react-native-reanimated';
 
 const HomeScreen = () => {
@@ -24,18 +25,24 @@ const HomeScreen = () => {
   const [data, setData] = useState<any>({});
   const { top } = useSafeAreaInsets();
   console.log('home');
-
-  const handleSnapToItem = async (idx: number) => {
-    const uri = `https://image.tmdb.org/t/p/w500/${nowPlaying[idx].poster_path}`;
-    setData((await getImagesColor(uri)).palette);
-    // console.log('snap');
-    // getPalette(uri)
-    //   .then(res => console.log('res', res))
-    //   .catch(err => console.log('err', err));
-    // console.log('snap to item');
-    // console.log(picAvgColor);
-    // setData(picAvgColor);
+  const { setMainColors } = useContext(GardientContext);
+  const getPosterColors = async (idx: number) => {
+    try {
+      const uri = `https://image.tmdb.org/t/p/w500/${nowPlaying[idx].poster_path}`;
+      setMainColors((await getImagesColor(uri)).palette);
+    } catch (error) {
+      throw error;
+    }
   };
+  const getPosterColorsRef = useRef(getPosterColors);
+
+  useEffect(() => {
+    if (nowPlaying.length > 0) {
+      console.log('in render');
+      getPosterColorsRef.current(0);
+    }
+  }, [nowPlaying.length]);
+
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', marginTop: top }}>
@@ -60,7 +67,7 @@ const HomeScreen = () => {
             loop={true}
             snapEnabled={true}
             pagingEnabled={true}
-            onSnapToItem={async idx => await handleSnapToItem(idx)}
+            onSnapToItem={async idx => await getPosterColors(idx)}
             renderItem={({ item, index }) => (
               <MoviePoster key={index} movie={item} />
             )}

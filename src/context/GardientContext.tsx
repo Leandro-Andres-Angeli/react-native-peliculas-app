@@ -8,9 +8,26 @@ interface IInitalStateGradientContent {
   setPreviousColors: (palette: PaletteResult) => void;
 }
 
-export const GardientContext = createContext<IInitalStateGradientContent>(
-  {} as IInitalStateGradientContent,
-);
+export const GardientContext = createContext<IInitalStateGradientContent>({
+  colors: {
+    darkMuted: 'transparent',
+    lightMuted: 'transparent',
+    darkVibrant: 'transparent',
+    lightVibrant: 'transparent',
+    muted: 'transparent',
+    vibrant: 'transparent',
+    dominantAndroid: 'transparent',
+  },
+  prevColors: {
+    darkMuted: 'transparent',
+    lightMuted: 'transparent',
+    darkVibrant: 'transparent',
+    lightVibrant: 'transparent',
+    muted: 'transparent',
+    vibrant: 'transparent',
+    dominantAndroid: 'transparent',
+  },
+} as IInitalStateGradientContent);
 
 interface Props extends PropsWithChildren {}
 export const GradientProvider = ({ children }: Props) => {
@@ -21,7 +38,7 @@ export const GradientProvider = ({ children }: Props) => {
     lightVibrant: 'transparent',
     muted: 'transparent',
     vibrant: 'transparent',
-    dominantAndroid: 'transparent',
+    dominantAndroid: 'red',
   });
   const setMainColors = (palette: PaletteResult) => {
     setColors(palette);
@@ -36,7 +53,7 @@ export const GradientProvider = ({ children }: Props) => {
     lightVibrant: 'transparent',
     muted: 'transparent',
     vibrant: 'transparent',
-    dominantAndroid: 'transparent',
+    dominantAndroid: 'blue',
   });
   return (
     <GardientContext.Provider
